@@ -67,7 +67,7 @@ def create_charts():
     
     #================= figure 2
     type = df['type'].value_counts()
-    transaction = type.index
+    transaction = type.index 
     count = type.values
     
     figure2 = plt.figure(figsize=(10,8))

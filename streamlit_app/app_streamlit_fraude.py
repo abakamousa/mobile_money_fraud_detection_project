@@ -29,10 +29,11 @@ from sklearn.pipeline          import Pipeline
 from sklearn.metrics           import precision_score, accuracy_score
 from sklearn.metrics           import precision_score, accuracy_score, recall_score, f1_score
 from joblib                    import dump, load
+from PIL                       import  Image
 
 def load_data():
     # J'importe les données 
-    data = pd.read_csv("C:/Users/engantchou/Documents/PROJET 1/fraud_detection_dataset.csv" , encoding = "ISO-8859-1" , sep = ",")
+    data = pd.read_csv("PS_20174392719_1491204439457_log.csv" , encoding = "ISO-8859-1" , sep = ",", nrows=200000)
     df = data
     df.isnull().sum()
     df['isFraud'].value_counts(normalize=True)
@@ -55,17 +56,42 @@ df = load_data()
 # Je ressorts les colonnes numériques du dataset 
 
 # Page centrale
-st.title("MOBILE MONEY FRAUD DETECTION", anchor="Center")
+st.title("DEMO: FRAUD DETECTION ON MOBILE MONEY TRANSACTION", anchor="Center")
 
 # Création du menu paramètres de gauche
-st.sidebar.header("DATASET PARAMETER")
-show_data = st.sidebar.checkbox('Print Dataset')
+st.sidebar.header("PRESENTATION")
+show_overview = st.sidebar.checkbox('Généralité')
+show_data = st.sidebar.checkbox('Afficher le Dataset')
+
+
+if show_overview:
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.write(' ')
+    with col2:
+        img = Image.open("mobile_money.jpg")
+        st.image(img, width = 200, caption = "")
+    with col3:
+        st.write(' ')
+
+    
+    st.write(
+            "* Orange money est le service de transfert d'argent et de paiement mobile du groupe Orange, proposé dans la majorité des pays d'Afrique où l'opérateur est présent. L'utilisateur peut envoyer et recevoir des fonds ou payer des services à partir de son téléphone portable sans avoir besoin d'un compte bancaire traditionnel. Il peut également passer par des agents enregistrés pour déposer des fonds (cash-in) ou transférer des fonds vers d'autres comptes et recevoir des fonds en échange (cash-out)."
+            "\n \n"
+            "* À mesure que ce secteur se développe, il est confronté à des risques accrus liés à la fraude. En 2020, près de $4 milliards a été perdue en raison de fraudes et d'escroqueries, un chiffre qui devrait augmenter avec le temps car les fraudeurs adoptent des méthodes de plus en plus sophistiquées."
+            
+            "\n \n"
+            "* Les types les plus courants de fraude à l'argent mobile consistent à prendre le contrôle du téléphone portable d'un utilisateur par hameçonnage via des appels vocaux (vishing) ou des messages SMS (smishing). Une fois que les escrocs ont accès à l'appareil, ils peuvent effectuer une fraude par échange de carte SIM en demandant au fournisseur de services téléphoniques de transférer le numéro vers l'une de leurs propres cartes SIM"
+            "\n"
+            )
 
 
 if show_data:
     st.header("Dataset")
     st.dataframe(df.head(7))
-
+    
+   
 st.sidebar.header("DATA VISUALIZATION")
 options_plots = st.sidebar.selectbox('Select Plots', ['', 'Count Plot', 'Pie Plot'])
 if (options_plots == 'Count Plot'): 
@@ -84,7 +110,7 @@ if (options_plots == 'Pie Plot'):
 
 
 st.sidebar.header("DATA PREPARATION FOR ML")
-status_model = st.sidebar.selectbox("Models Selected : ", ('', 'Unsupervised', 'Surpervised'))
+status_model = st.sidebar.selectbox("ML type : ", ('', 'Unsupervised', 'Supervised'))
 if (status_model  == 'Unsupervised'):
     payment = df[df['type']=="PAYMENT"]
     cash_in = df[df['type']=='CASH_IN']
@@ -132,7 +158,7 @@ if (status_model  == 'Unsupervised'):
         sns.boxplot(x=df_unsupervised.type, y=df_unsupervised.amount)
         st.pyplot(fig_7)
     
-if (status_model  == 'Surpervised'):
+if (status_model  == 'Supervised'):
     df_supervised   = df.loc[(df["type"] == "TRANSFER") | (df["type"] == "CASH_OUT")]
 
     df_supervised = encode_df(df_supervised)
@@ -149,12 +175,14 @@ if (status_model  == 'Surpervised'):
         st.pyplot(fig_7)
 
 st.sidebar.header("PREDICTION")
-status_result = st.sidebar.selectbox("Metrics : ", ('', 'results'))
+status_result = st.sidebar.selectbox("Choose model : ", ('', 'RandomForest'))
 
-if (status_result  == 'results'):
+if (status_result  == 'RandomForest'):
+    st.title("Résultats de prédiction à l'aide du RandomForest \n ")
+    st.info('Note: La classe 0 correspond à une transaction frauduleuse Fraud et la classe 1 correspond à une transaction Normale')
     filename = 'best_baseline_model.sav'
     # joblib.dump(clf2, filename)
     loaded_model = joblib.load(filename)
-    test_data = pd.DataFrame('C:/Users/engantchou/Documents/PROJET 1/test_data_csv', encoding = "ISO-8859-1" , sep = ",")
-    result = loaded_model.predict()
+    test_data = pd.read_csv("test_data.csv" , encoding = "ISO-8859-1" , sep = "," , nrows=20)
+    result = loaded_model.predict(test_data)
     st.table(result)

@@ -179,7 +179,7 @@ status_result = st.sidebar.selectbox("Choose model : ", ('', 'RandomForest'))
 
 if (status_result  == 'RandomForest'):
     st.title("Résultats de prédiction à l'aide du RandomForest \n ")
-    st.info('Note: La classe 0 correspond à une transaction frauduleuse Fraud et la classe 1 correspond à une transaction Normale')
+    st.info('Note: La classe 0 correspond à une transaction non frauduleuse et la classe 1 correspond à une transaction frauduleuse')
     filename = 'best_baseline_model.sav'
     # joblib.dump(clf2, filename)
     loaded_model = joblib.load(filename)

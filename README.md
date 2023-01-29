@@ -12,9 +12,15 @@ In order to use the data made available by Kaggle, you will need to follow the s
 - Copy the key and paste it into the notebook cell when prompted.
 
 
-# Methods used
+# Techniques used
+- Exploratory data analysis
+- Feature Engineering
+- Supervised learning
+- Unsupervised learning
+- Grid search
 
 
 # Technologies
 - Python
 - Jupyter
+- Streamlit

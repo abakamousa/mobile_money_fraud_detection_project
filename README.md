@@ -2,6 +2,10 @@
 
 This repository presents an ML use case on mobile money data from Kaggle
 
+# Objective
+
+Predicting if a mobile money transaction is fraudulent using data from the past.
+
 # Utilisation of kaggle dataset on collab
 
 In order to use the data made available by Kaggle, you will need to follow the steps below:
